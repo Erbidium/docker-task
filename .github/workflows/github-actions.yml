@@ -95,4 +95,7 @@ jobs:
         run: |
           docker run -p 80:80 -d ${{ secrets.DOCKERHUB_USERNAME }}/docker-task
           docker container ls
+      - name: curl
+        run: |
+          sleep 5;
           curl localhost:80
