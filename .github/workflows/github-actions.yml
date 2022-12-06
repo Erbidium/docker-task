@@ -16,8 +16,7 @@ jobs:
           node-version: 14.x
 
       - name: Install packages
-        run: |
-          npm ci
+        run: npm ci
 
       - name: Eslint and Prettier checks
         run: |
@@ -67,12 +66,10 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Load Docker image
-        run: |
-          docker load --input /tmp/docker-task.tar
+        run: docker load --input /tmp/docker-task.tar
 
       - name: Push Docker image
-        run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/docker-task
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/docker-task
 
   run-docker-image:
     needs: push-docker-image
@@ -88,14 +85,16 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Pull Docker image
-        run: |
-          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/docker-task:latest
+        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/docker-task:latest
+
+      - name: Create Docker Network
+        run: docker network create task
 
       - name: Run Docker image
-        run: |
-          docker run -p 80:80 -d ${{ secrets.DOCKERHUB_USERNAME }}/docker-task
-          docker container ls
-      - name: curl
-        run: |
-          sleep 5;
-          curl localhost:80
+        run: docker run --network task --name app -p 80:80 -d ${{ secrets.DOCKERHUB_USERNAME }}/docker-task
+
+      - name: Wait for application start
+        run: docker run --network task willwill/wait-for-it app -t 10 -s -- echo "App is running"
+
+      - name: Curl test
+        run: curl localhost:80
