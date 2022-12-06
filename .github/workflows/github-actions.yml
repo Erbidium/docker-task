@@ -94,7 +94,7 @@ jobs:
         run: docker run --network task --name app -p 80:80 -d ${{ secrets.DOCKERHUB_USERNAME }}/docker-task
 
       - name: Wait for application start
-        run: docker run --network task willwill/wait-for-it app -t 10 -s -- echo "App is running"
+        run: docker run --network task willwill/wait-for-it http://app -t 10 -s -- echo "App is running"
 
       - name: Curl test
         run: curl localhost:80
