@@ -30,7 +30,7 @@ spec:
           imagePullPolicy: IfNotPresent
           resources:
           ports:
-              containerPort: 8080
+            - containerPort: 8080
           volumeMounts:
           - mountPath: /etc/nginx
             readOnly: true
