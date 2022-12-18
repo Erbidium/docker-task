@@ -1,9 +1,9 @@
 name: Code Analysis
 on:
   push:
-    branches: [ ci-cd-task ]
+    branches: [ ci-cd-task, kubernetes ]
   pull_request:
-    branches: [ ci-cd-task ]
+    branches: [ ci-cd-task, kubernetes ]
 jobs:
   analyze_application:
     runs-on: ubuntu-latest
