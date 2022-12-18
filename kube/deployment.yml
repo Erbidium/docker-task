@@ -1,21 +1,9 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: docker-task
-spec:
-  selector:
-    app: docker-task
-  ports:
-    - port: 80
-      targetPort: 80
-  type: LoadBalancer
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: docker-task
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: docker-task
@@ -37,3 +25,20 @@ spec:
             initialDelaySeconds: 3
             periodSeconds: 3
             failureThreshold: 2
+        - name: nginx
+          image: nginx
+          imagePullPolicy: IfNotPresent
+          resources:
+          ports:
+              containerPort: 8080
+          volumeMounts:
+          - mountPath: /etc/nginx
+            readOnly: true
+            name: nginx-conf
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-conf
+            items:
+              - key: virtualhost.conf
+                path: virtualhost/virtualhost.conf
