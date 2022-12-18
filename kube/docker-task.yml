@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-task
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: docker-task
+  template:
+    metadata:
+      labels:
+        app: docker-task
+    spec:
+      containers:
+        - name: docker-task
+          image: erbidium/docker-task:latest
+          ports:
+            - containerPort: 3000
+          imagePullPolicy: Always
