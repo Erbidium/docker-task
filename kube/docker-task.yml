@@ -30,3 +30,10 @@ spec:
           ports:
             - containerPort: 80
           imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: /health-check
+              port: 80
+            initialDelaySeconds: 3
+            periodSeconds: 3
+            failureThreshold: 2
